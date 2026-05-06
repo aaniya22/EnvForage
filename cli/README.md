@@ -1,6 +1,6 @@
 # envforge-agent
 
-> Standalone CLI diagnostic agent for the [EnvForge](https://github.com/your-org/envforge) platform.
+> Standalone CLI diagnostic agent for the [EnvForge](https://github.com/rishabh0510rishabh/EnvForage) platform.
 
 Inspects your local ML environment and reports what's installed, what's compatible,
 and what's broken — without requiring a network connection.

@@ -46,10 +46,10 @@ dev = [
 envforge = "envforge_agent.cli:cli"
 
 [project.urls]
-Homepage = "https://github.com/your-org/envforge"
-Documentation = "https://github.com/your-org/envforge/docs"
-Repository = "https://github.com/your-org/envforge"
-"Bug Tracker" = "https://github.com/your-org/envforge/issues"
+Homepage = "https://github.com/rishabh0510rishabh/EnvForage"
+Documentation = "https://github.com/rishabh0510rishabh/EnvForage/docs"
+Repository = "https://github.com/rishabh0510rishabh/EnvForage"
+"Bug Tracker" = "https://github.com/rishabh0510rishabh/EnvForage/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["envforge_agent"]

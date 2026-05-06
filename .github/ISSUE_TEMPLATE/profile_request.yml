@@ -1,0 +1,52 @@
+name: Profile Request
+description: Request a new ML environment profile to be added to EnvForge
+title: "[Profile]: "
+labels: ["enhancement", "profile"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Want a new ML environment profile added to the default seeds? Let us know what you need!
+  - type: input
+    id: profile-name
+    attributes:
+      label: Proposed Profile Name
+      description: e.g., JAX GPU, HuggingFace Audio, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: core-packages
+    attributes:
+      label: Core Packages
+      description: What are the main Python packages and versions needed?
+      placeholder: |
+        - jax
+        - jaxlib (needs CUDA)
+        - flax
+    validations:
+      required: true
+  - type: dropdown
+    id: cuda-requirement
+    attributes:
+      label: CUDA Requirement
+      options:
+        - Required
+        - Optional
+        - Not needed (CPU only)
+    validations:
+      required: true
+  - type: checkboxes
+    id: os-support
+    attributes:
+      label: Supported Operating Systems
+      options:
+        - label: Linux
+        - label: WSL2
+        - label: Windows
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Typical Use Case
+      description: Briefly describe what this profile is commonly used for.
+    validations:
+      required: true

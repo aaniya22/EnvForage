@@ -1,0 +1,65 @@
+name: Bug Report
+description: Create a report to help us improve EnvForge
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! 
+        Before submitting, please make sure you've searched existing issues to see if someone else has already reported it.
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+      placeholder: When I generate a script for profile X, it outputs...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Run `envforge diagnose`
+        2. Send report to API using `envforge fix --profile tf-gpu -r report.json`
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostic-report
+    attributes:
+      label: Diagnostic Report
+      description: Please paste the JSON output of `envforge diagnose` here to help us debug.
+      render: json
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: EnvForge Version
+      description: What version of EnvForge or the CLI agent are you using?
+      placeholder: e.g., 0.2.0
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which part of EnvForge is this bug related to?
+      options:
+        - CLI Agent (envforge-agent)
+        - Backend API
+        - Compatibility Engine
+        - Templates
+        - Other
+    validations:
+      required: true

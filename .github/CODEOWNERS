@@ -1,0 +1,18 @@
+# EnvForge CODEOWNERS
+
+# Global owners for everything
+*       @rishabh0510rishabh
+
+# Backend Core & API
+/backend/app/api/       @rishabh0510rishabh
+/backend/app/services/  @rishabh0510rishabh
+
+# Compatibility & Templates (Critical Logic)
+/backend/app/compatibility/ @rishabh0510rishabh
+/backend/app/templates/     @rishabh0510rishabh
+
+# CLI Agent
+/cli/                   @rishabh0510rishabh
+
+# Documentation
+/docs/                  @rishabh0510rishabh
