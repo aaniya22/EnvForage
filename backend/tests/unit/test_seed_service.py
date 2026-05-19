@@ -1,33 +1,44 @@
 import pytest
 from pydantic import ValidationError
-from backend.schemas.seed import GenerationRequest 
+from backend.schemas.seed import GenerationRequest
 
-def test_generation_request_valid_data():
-    """Verifies valid data parses successfully through the model"""
-    valid_payload = {
+def test_valid_payload_parsing():
+    data = {
         "target_os": "linux",
         "framework": "pytorch",
         "cuda_version": "12.1"
     }
-    request = GenerationRequest(**valid_payload)
+    request = GenerationRequest(**data)
     assert request.target_os == "linux"
     assert request.framework == "pytorch"
+    assert request.cuda_version == "12.1"
 
-def test_generation_request_invalid_os():
-    """Catches a ValidationError when an invalid target_os value is passed"""
-    invalid_payload = {
-        "target_os": "invalid_operating_system",
+def test_invalid_target_os_raises_error():
+    data = {
+        "target_os": "invalid_os_name",
         "framework": "pytorch",
         "cuda_version": "12.1"
     }
     with pytest.raises(ValidationError):
-        GenerationRequest(**invalid_payload)
+        GenerationRequest(**data)
 
-def test_generation_request_missing_fields():
-    """Catches a ValidationError when mandatory payload fields are missing"""
-    incomplete_payload = {
+def test_invalid_data_types_raises_error():
+    data = {
+        "target_os": 12345,
+        "framework": "pytorch",
         "cuda_version": "12.1"
     }
     with pytest.raises(ValidationError):
-        GenerationRequest(**incomplete_payload)
-      
+        GenerationRequest(**data)
+
+def test_missing_required_fields_raises_error():
+    data = {
+        "cuda_version": "12.1"
+    }
+    with pytest.raises(ValidationError):
+        GenerationRequest(**data)
+
+def test_empty_payload_raises_error():
+    with pytest.raises(ValidationError):
+        GenerationRequest(**{})
+        
