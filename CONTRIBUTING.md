@@ -25,9 +25,9 @@ Please read the [Code of Conduct](./CODE_OF_CONDUCT.md) to keep our community ap
    ```bash
    # Recommended: Install globally
    pipx install pre-commit
-   
+
    # From the repo root, install the hooks
-   pre-commit install
+   python -m pre-commit install
    ```
    > **Note**: If you prefer not to install it globally, you can use the version installed in `backend/.venv`, but you **must** ensure that virtual environment is active whenever you run `git commit`.
 
