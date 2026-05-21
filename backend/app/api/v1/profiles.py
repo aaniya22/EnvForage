@@ -4,6 +4,8 @@ import logging
 from fastapi import APIRouter, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
+logger = logging.getLogger(__name__)
+
 from app.api.deps import DB
 
 logger = logging.getLogger(__name__)

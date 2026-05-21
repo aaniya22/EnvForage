@@ -104,7 +104,11 @@ async def create_profile(
         db_profile.packages.append(db_pkg)
         
     db.add(db_profile)
-    await db.commit()
+    try:
+        await db.commit()
+    except Exception:
+        await db.rollback()
+        raise
     
     # Fetch the profile again with packages selectinloaded to avoid lazy-loading errors
     profile = await get_profile_by_id(db, db_profile.id)
@@ -125,5 +129,9 @@ async def delete_profile(
     profile.deleted_at = datetime.now(timezone.utc)
     profile.status = "DELETED"
     
-    await db.commit()
+    try:
+        await db.commit()
+    except Exception:
+        await db.rollback()
+        raise
     return True

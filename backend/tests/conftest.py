@@ -33,9 +33,11 @@ def compile_binary_sqlite(element, compiler, **kw):
     operator = element.operator
     op_str = getattr(operator, "opstring", "")
     if op_str == "@>":
-        left = compiler.process(element.left, **kw)
-        right = compiler.process(element.right, **kw)
-        return f"array_contains({left}, {right})"
+        left_type = element.left.type
+        if hasattr(left_type, 'item_type'):
+            left = compiler.process(element.left, **kw)
+            right = compiler.process(element.right, **kw)
+            return f"array_contains({left}, {right})"
     return compiler.visit_binary(element, **kw)
 
 # 2. Monkeypatch bind/result processors of postgresql.ARRAY for SQLite
@@ -113,4 +115,36 @@ async def db_session():
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
+    await engine.dispose()
+
+
+@pytest.fixture
+async def db_session_factory(db_session):
+    """Provide the session factory for per-request session creation."""
+    engine = create_async_engine(TEST_DB_URL, echo=False)
+
+    @event.listens_for(engine.sync_engine, "connect")
+    def register_sqlite_functions(dbapi_connection, connection_record):
+        def array_contains(arr_str, item_str):
+            if not arr_str or not item_str:
+                return False
+            try:
+                arr = json.loads(arr_str)
+                try:
+                    item = json.loads(item_str)
+                except Exception:
+                    item = item_str
+                
+                if isinstance(item, list):
+                    return all(x in arr for x in item)
+                return item in arr
+            except Exception:
+                return False
+                
+        dbapi_connection.create_function("array_contains", 2, array_contains)
+
+    session_factory = async_sessionmaker(
+        bind=engine, class_=AsyncSession, expire_on_commit=False
+    )
+    yield session_factory
     await engine.dispose()
