@@ -6,6 +6,7 @@ All detector tests mock subprocess / platform — no nvidia-smi required.
 """
 from __future__ import annotations
 
+import sys
 import json
 from pathlib import Path
 from unittest import runner
@@ -118,6 +119,55 @@ class TestOSDetector:
                 result = _detect_wsl()
         assert result is None
 
+    @pytest.mark.skipif(sys.platform != "win32", reason="requires winreg/Windows")
+    @patch("winreg.OpenKey")
+    @patch("winreg.QueryValueEx")
+    @patch("platform.release")
+    def test_detect_windows_10(self, mock_release, mock_query, mock_openkey) -> None:
+        from envforge_agent.detectors.os_detector import _detect_windows
+        mock_release.return_value = "10"
+        mock_query.side_effect = [
+            ("Windows 10 Home", 1),
+            ("19045", 1),
+            ("22H2", 1),
+        ]
+        result = _detect_windows("AMD64")
+        assert result.name == "Windows 10 Home"
+        assert result.version == "22H2 (Build 19045)"
+        assert result.architecture == "AMD64"
+
+    @pytest.mark.skipif(sys.platform != "win32", reason="requires winreg/Windows")
+    @patch("winreg.OpenKey")
+    @patch("winreg.QueryValueEx")
+    @patch("platform.release")
+    def test_detect_windows_11_via_build(self, mock_release, mock_query, mock_openkey) -> None:
+        from envforge_agent.detectors.os_detector import _detect_windows
+        mock_release.return_value = "10"
+        mock_query.side_effect = [
+            ("Windows 10 Home Single Language", 1),
+            ("22000", 1),
+            ("21H2", 1),
+        ]
+        result = _detect_windows("AMD64")
+        assert result.name == "Windows 11 Home Single Language"
+        assert result.version == "21H2 (Build 22000)"
+
+    @pytest.mark.skipif(sys.platform != "win32", reason="requires winreg/Windows")
+    @patch("winreg.OpenKey")
+    @patch("winreg.QueryValueEx")
+    @patch("platform.release")
+    def test_detect_windows_11_via_release(self, mock_release, mock_query, mock_openkey) -> None:
+        from envforge_agent.detectors.os_detector import _detect_windows
+        mock_release.return_value = "11"
+        mock_query.side_effect = [
+            ("Windows 10 Pro", 1),
+            ("invalid_build", 1),
+            ("23H2", 1),
+        ]
+        result = _detect_windows("AMD64")
+        assert result.name == "Windows 11 Pro"
+        assert result.version == "23H2 (Build invalid_build)"
+
 
 # ── GPU Detector tests ────────────────────────────────────────────────────────
 
@@ -205,6 +255,48 @@ class TestCUDADetector:
         with patch.dict("os.environ", {"CUDA_PATH": r"C:\CUDA\v12.1"}):
             result = _cuda_path_env_version()
         assert result == "12.1"
+
+    @patch("subprocess.run")
+    def test_nvidia_smi_cuda_version_query_success(self, mock_run: MagicMock) -> None:
+        from envforge_agent.detectors.cuda_detector import _nvidia_smi_cuda_version
+        mock_proc = MagicMock()
+        mock_proc.returncode = 0
+        mock_proc.stdout = "12.3\n"
+        mock_run.return_value = mock_proc
+        
+        result = _nvidia_smi_cuda_version()
+        assert result == "12.3"
+
+    @patch("subprocess.run")
+    def test_nvidia_smi_cuda_version_fallback_success(self, mock_run: MagicMock) -> None:
+        from envforge_agent.detectors.cuda_detector import _nvidia_smi_cuda_version
+        
+        # First call (query-gpu) fails
+        mock_query_fail = MagicMock()
+        mock_query_fail.returncode = 1
+        
+        # Second call (standard nvidia-smi) succeeds
+        mock_fallback_ok = MagicMock()
+        mock_fallback_ok.returncode = 0
+        mock_fallback_ok.stdout = (
+            "Fri May 22 15:53:56 2026       \n"
+            "+-----------------------------------------------------------------------------------------+\n"
+            "| NVIDIA-SMI 595.79                 Driver Version: 595.79         CUDA Version: 13.2     |\n"
+            "+-----------------------------------------+------------------------+----------------------+\n"
+        )
+        
+        mock_run.side_effect = [mock_query_fail, mock_fallback_ok]
+        
+        result = _nvidia_smi_cuda_version()
+        assert result == "13.2"
+
+    @patch("subprocess.run")
+    def test_nvidia_smi_cuda_version_not_found(self, mock_run: MagicMock) -> None:
+        from envforge_agent.detectors.cuda_detector import _nvidia_smi_cuda_version
+        mock_run.side_effect = FileNotFoundError()
+        
+        result = _nvidia_smi_cuda_version()
+        assert result is None
 
 
 # ── Python Detector tests ─────────────────────────────────────────────────────
