@@ -25,6 +25,8 @@ from envforge_agent import __version__
 from envforge_agent.report import ReportBuilder
 from envforge_agent.schemas import DiagnosticReport
 
+from envforge_agent.utils import _map_os_to_target, _extract_python_version
+
 console = Console()
 err_console = Console(stderr=True, style="bold red")
 
@@ -122,7 +124,11 @@ def _print_report_summary(report: DiagnosticReport) -> None:
     if report.os.wsl_version:
         table.add_row("WSL", report.os.wsl_version)
 
-    table.add_row("CPU", f"{report.cpu.brand} — {report.cpu.cores}C / {report.cpu.threads}T")
+    cpu_str = f"{report.cpu.brand} — {report.cpu.cores}C / {report.cpu.threads}T"
+    if report.cpu.cores < 4:
+        cpu_str += "  [yellow]⚠ WARNING: Under 4 cores — data loading may bottleneck training[/]"
+    table.add_row("CPU", cpu_str)
+    
     ram_str = f"{report.ram.total_gb} GB total, {report.ram.available_gb} GB free"
     if report.ram.total_gb < 8:
         ram_str += "  [bold red][!] CRITICAL: Under 8 GB — heavy ML profiles will fail[/]"
@@ -481,16 +487,3 @@ def fix(report: str, profile: str, api_url: str, dry_run: bool) -> None:
         sys.exit(1)
 
 
-def _map_os_to_target(report: DiagnosticReport) -> str:
-    if report.os.wsl_version:
-        return "WSL"
-    if "windows" in report.os.name.lower():
-        return "WIN"
-    return "LINUX"
-
-
-def _extract_python_version(report: DiagnosticReport) -> str:
-    if report.active_python:
-        parts = report.active_python.version.split(".")
-        return f"{parts[0]}.{parts[1]}"
-    return "3.11"  # safe default

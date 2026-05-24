@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
 from app.api.v1 import (
+    compatibility,
     diagnose,
     profiles,
     repair,
@@ -68,6 +69,7 @@ def create_app() -> FastAPI:
     app.include_router(troubleshoot.router, prefix="/api/v1", tags=["ai"])
     app.include_router(repair.router, prefix="/api/v1", tags=["ai"])
     app.include_router(verify.router, prefix="/api/v1", tags=["verify"])
+    app.include_router(compatibility.router, prefix="/api/v1", tags=["compatibility"])
 
     # ── Health check ──────────────────────────────────────────
     @app.get("/health", include_in_schema=False)
