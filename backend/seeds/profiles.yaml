@@ -193,4 +193,38 @@ profiles:
         install_order: 6
       - name: scipy
         version_spec: "1.13.0"
-        install_order: 7
+        install_order: 7  - slug: huggingface-audio
+    name: "HuggingFace Audio"
+    description: >
+      Audio ML processing environment tuned for speech and audio models.
+      Includes Whisper (openai-whisper), Librosa, SoundFile, and Transformers.
+      Requires ffmpeg as a system-level dependency for audio I/O.
+    tags: [audio, speech, whisper, huggingface, transformers]
+    os_support: [LINUX, WSL, WIN, MAC]
+    cuda_required: false
+    python_versions: ["3.10", "3.11", "3.12", "3.13"]
+    cuda_versions: []
+    status: ACTIVE
+    last_validated: "2026-05-26"
+    system_requirements:
+      - name: ffmpeg
+        notes: "Required for audio decoding. Install via apt, brew, or winget."
+    packages:
+      - name: openai-whisper
+        version_spec: "20231117"
+        install_order: 0
+      - name: transformers
+        version_spec: "4.40.0"
+        install_order: 1
+      - name: librosa
+        version_spec: "0.10.1"
+        install_order: 2
+      - name: soundfile
+        version_spec: "0.12.1"
+        install_order: 3
+      - name: torch
+        version_spec: "2.5.0"
+        install_order: 4
+      - name: numpy
+        version_spec: "1.26.4"
+        install_order: 5
