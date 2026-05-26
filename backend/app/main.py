@@ -1,11 +1,11 @@
 """
 FastAPI application factory and lifespan management.
 """
-
 import asyncio
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -24,6 +24,7 @@ from app.cache import get_redis_client
 from app.config import get_settings
 from app.core.handlers import register_exception_handlers
 from app.database import AsyncSessionLocal
+from app.services.cleanup_service import run_cleanup
 
 
 @asynccontextmanager
@@ -33,13 +34,28 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     print(
         f"[START] EnvForge API {settings.app_version} starting [{settings.environment}]"
     )
+
+    # ── Background cleanup scheduler ─────────────────────────
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(
+        run_cleanup,
+        trigger="interval",
+        hours=24,
+        id="db_cleanup",
+        replace_existing=True,
+        misfire_grace_time=3600,
+    )
+    scheduler.start()
+    print("✅ Cleanup scheduler started (runs every 24h)")
+
     yield
+
+    scheduler.shutdown(wait=False)
     print("🛑 EnvForge API shutting down")
 
 
 def create_app() -> FastAPI:
     settings = get_settings()
-
     app = FastAPI(
         title=settings.app_name,
         version=settings.app_version,
@@ -53,7 +69,6 @@ def create_app() -> FastAPI:
         openapi_url="/api/openapi.json",
         lifespan=lifespan,
     )
-
     register_exception_handlers(app)
 
     # ── CORS ─────────────────────────────────────────────────
@@ -80,7 +95,6 @@ def create_app() -> FastAPI:
         db_status = "ok"
         redis_status = "ok"
         overall = "healthy"
-
         try:
             async with asyncio.timeout(2):
                 async with AsyncSessionLocal() as session:
@@ -88,7 +102,6 @@ def create_app() -> FastAPI:
         except Exception:
             db_status = "unavailable"
             overall = "degraded"
-
         try:
             async with asyncio.timeout(2):
                 redis = await get_redis_client()
@@ -99,7 +112,6 @@ def create_app() -> FastAPI:
         except Exception:
             redis_status = "unavailable"
             overall = "degraded"
-
         return JSONResponse(
             status_code=200 if overall == "healthy" else 503,
             content={
