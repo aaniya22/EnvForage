@@ -6,8 +6,17 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 OSTarget = Literal["LINUX", "WSL", "WIN"]
-OutputFormat = Literal["setup.sh", "setup.ps1", "requirements.txt", "Dockerfile", "docker-compose.yml", "devcontainer.json", "pyproject.toml", "poetry.toml"]
-
+OutputFormat = Literal[
+    "setup.sh",
+    "setup.ps1",
+    "requirements.txt",
+    "Dockerfile",
+    "docker-compose.yml",
+    "devcontainer.json",
+    ".gitignore",
+    "pyproject.toml",
+    "pyproject.poetry.toml"
+]
 
 class GenerationRequest(BaseModel):
     """Request body for POST /scripts/generate."""
@@ -27,6 +36,10 @@ class GenerationRequest(BaseModel):
     use_uv: bool = Field(
         default=False,
         description="Use uv instead of pip for package installation",
+    )
+    use_micromamba: bool = Field(
+        default=False,
+        description="Use micromamba instead of standard Conda/Miniconda for environment management",
     )
 
 
