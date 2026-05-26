@@ -48,6 +48,8 @@ class Settings(BaseSettings):
     def allowed_origins_list(self) -> list[str]:
         return [o.strip() for o in self.allowed_origins.split(",")]
 
+    api_key: str | None = None  # Set API_KEY env var to enable auth
+
     # ── AI / LLM ─────────────────────────────────────────────
     envforge_llm_provider: Literal["openai", "openrouter", "ollama", "mock"] = "mock"
     openai_api_key: str = ""

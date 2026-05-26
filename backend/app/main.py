@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.middleware.auth import APIKeyMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
@@ -56,6 +57,7 @@ def create_app() -> FastAPI:
 
     register_exception_handlers(app)
 
+    app.add_middleware(APIKeyMiddleware)
     # ── CORS ─────────────────────────────────────────────────
     app.add_middleware(
         CORSMiddleware,
