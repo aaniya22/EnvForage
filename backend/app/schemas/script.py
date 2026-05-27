@@ -11,9 +11,18 @@ OutputFormat = Literal[
     "setup.ps1",
     "requirements.txt",
     "Dockerfile",
+
     "devcontainer.json",
     "pyproject.toml",
     "Makefile",
+]
+
+    "environment.yml",
+    "docker-compose.yml",
+    "devcontainer.json",
+    ".gitignore",
+    "pyproject.toml",
+    "pyproject.poetry.toml"
 ]
 
 
@@ -35,6 +44,10 @@ class GenerationRequest(BaseModel):
     use_uv: bool = Field(
         default=False,
         description="Use uv instead of pip for package installation",
+    )
+    use_micromamba: bool = Field(
+        default=False,
+        description="Use micromamba instead of standard Conda/Miniconda for environment management",
     )
 
 
