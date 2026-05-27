@@ -1,0 +1,33 @@
+replicaCount: 1
+
+image:
+  repository: envforge-backend
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: false
+  className: nginx
+  host: envforge.local
+  tls: false
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+env:
+  DATABASE_URL: "postgresql://user:password@postgres:5432/envforge"
+  REDIS_URL: "redis://envforge-redis:6379/0"
+
+redis:
+  enabled: true
+  image: redis:7-alpine
+  port: 6379
