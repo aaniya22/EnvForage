@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
 from app.api.v1 import (
+    authentication,
     compatibility,
     diagnose,
     profiles,
@@ -19,7 +20,6 @@ from app.api.v1 import (
     scripts,
     troubleshoot,
     verify,
-    authentication,
 )
 from app.cache import get_redis_client
 from app.config import get_settings

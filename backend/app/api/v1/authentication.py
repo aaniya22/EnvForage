@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from fastapi import APIRouter, HTTPException
 from jose import jwt
@@ -42,6 +42,6 @@ def signin(data:LoginData):
     usr=users_db.get(data.email)
     if not usr or not pwd.verify(data.password,usr["password"]):
         raise HTTPException(status_code=401,detail="Invalid email or password")
-    exp=datetime.now(timezone.utc)+timedelta(hours=24)
+    exp=datetime.now(UTC)+timedelta(hours=24)
     token=jwt.encode({"email":data.email,"exp":exp},SK,algorithm="HS256")
     return {"token":token,"email":data.email}
