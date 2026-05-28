@@ -13,10 +13,11 @@ from app.compatibility.errors import (
     UnknownVersionError,
     UnsupportedOSError,
 )
-from app.compatibility.models import OSTarget, PackageConstraint
+from app.compatibility.models import OSTarget, PackageConstraint, ResolvedEnvironment
 from app.compatibility.resolver import CompatibilityResolver
 from app.middleware.rate_limit import ai_rate_limit
 from app.models.diagnostic import DiagnosticReport
+from app.models.profile import EnvironmentProfile
 from app.schemas.diagnostic import (
     CompatibilityIssue,
     DiagnoseResponse,
@@ -127,7 +128,7 @@ async def diagnose(
     # the duration of every resolve call. Under concurrent load, all other
     # requests queue behind the resolver. Each call is offloaded to a thread
     # via asyncio.to_thread so the event loop stays free.
-    async def _resolve(profile):
+    async def _resolve(profile: EnvironmentProfile) -> ResolvedEnvironment:
         packages = [
             PackageConstraint(
                 name=package.package_name,
@@ -180,6 +181,7 @@ async def diagnose(
         elif isinstance(result, Exception):
             logger.warning("Resolver raised unexpected error for profile %s: %s", profile.slug, result)
         else:
+            assert isinstance(result, ResolvedEnvironment)
             compatible_profiles.append(profile.slug)
             if result.warnings:
                 recommendations.extend(result.warnings)
