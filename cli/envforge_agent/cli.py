@@ -130,9 +130,6 @@ def diagnose(output: str | None, send: bool, api_url: str, quiet: bool, sarif: b
 async def _diagnose(output: str | None, send: bool, api_url: str, quiet: bool, sarif: bool, timeout: int, output_format: str = "json") -> None:
     """
     Collect a full diagnostic report of this machine's ML environment.
-
-    Detects: OS, CPU, RAM, GPU, CUDA, cuDNN, Python installations.
-    Outputs: DiagnosticReport JSON compatible with POST /api/v1/diagnose.
     """
     if not quiet:
         console.print(
