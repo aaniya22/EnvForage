@@ -255,7 +255,7 @@ class CompatibilityResolver:
         if not entries:
             return ResolvedPackage(
                 name=package_name,
-                version=version_spec.lstrip(">=<!=~"),
+                version=version_spec,
                 cuda_variant=cuda_variant,
             )
 
