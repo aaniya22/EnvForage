@@ -482,16 +482,18 @@ class TestConfigFileSource:
             "[project]\n"
             "dependencies = [\n"
             '    "requests>=2.31.0",\n'
-            "    \"django==4.2.0; python_version < '3.10'\",\n"
-            '    "numpy~=1.24.0",\n'
-            '    "pandas<=2.0.0"\n'
+            "    \"django==4.2rc1; python_version < '3.10'\",\n"
+            '    "numpy~=1.24.0rc3",\n'
+            '    "pandas<=2.0.0",\n'
+            '    "pkg!=1.2.0"\n'
             "]\n"
         )
         packages = sorted(ConfigFileSource(pyproject).packages(), key=lambda p: p.name)
         assert packages == [
-            Package(name="django", version="4.2.0"),
-            Package(name="numpy", version="1.24.0"),
+            Package(name="django", version="4.2rc1"),
+            Package(name="numpy", version="1.24.0rc3"),
             Package(name="pandas", version="2.0.0"),
+            Package(name="pkg", version="1.2.0"),
             Package(name="requests", version="2.31.0"),
         ]
 

@@ -164,7 +164,10 @@ class ConfigFileSource(Source):
         for dep_str in project_deps:
             # Parse PEP 508 string (e.g., "requests>=2.31.0; python_version<'3.10'")
             # Simple parser for MVP: split on operators
-            match = re.match(r"^([a-zA-Z0-9_\-\.]+)\s*(>=|==|<=|>|<|~=)\s*([0-9\.]+)", dep_str)
+            match = re.match(
+                r"^([a-zA-Z0-9_\-\.]+)\s*(>=|==|<=|>|<|~=|!=)\s*([^;,\s]+)",
+                dep_str.strip(),
+            )
             if match:
                 name, op, version = match.groups()
                 if name != "python":
