@@ -46,14 +46,29 @@ export default function HomePage() {
       <div
         style={{
           position: "absolute",
-          width: "300px",
-          height: "300px",
+          width: "400px",
+          height: "400px",
           borderRadius: "999px",
-          background: "rgba(34,197,94,0.25)",
+          background: "rgba(34,197,94,0.15)",
           filter: "blur(120px)",
-          top: "-100px",
+          top: "-150px",
           left: "-100px",
-          animation: "float 6s ease-in-out infinite",
+          animation: "float 8s ease-in-out infinite",
+          zIndex: 0,
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          width: "500px",
+          height: "500px",
+          borderRadius: "999px",
+          background: "rgba(59,130,246,0.1)",
+          filter: "blur(150px)",
+          top: "100px",
+          right: "-200px",
+          animation: "float 10s ease-in-out infinite reverse",
+          zIndex: 0,
         }}
       />
       {/* Hero Section */}
@@ -225,7 +240,9 @@ export default function HomePage() {
                       border: "1px solid var(--border-subtle)",
                       borderRadius: "24px",
                       backdropFilter: "blur(10px)",
-                      boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
+                      boxShadow: "var(--shadow-lg)",
+                      position: "relative",
+                      zIndex: 1,
                     }}
                   >
                     <Icon
@@ -308,7 +325,9 @@ export default function HomePage() {
               background: 'linear-gradient(135deg, rgba(34,197,94,0.1), rgba(59,130,246,0.1))',
               borderRadius: '32px',
               border: '1px solid var(--border-subtle)',
-              boxShadow: "0 20px 50px rgba(0,0,0,0.1)"
+              boxShadow: "var(--shadow-lg)",
+              position: "relative",
+              zIndex: 1,
             }}
           >
             <h2 style={{ fontSize: '3rem', marginBottom: '1.5rem', fontWeight: 800 }}>Ready to Forge Your Environment?</h2>
