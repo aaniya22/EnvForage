@@ -257,6 +257,10 @@ a:hover {
   background-size: 6px 6px;
 }
 
+[data-theme="dark"] .highlight-strip {
+  background-image: none;
+}
+
 /* ─────────────────────────────────────────────────────────────
    THEME TOGGLE BUTTON (Navbar)
    ───────────────────────────────────────────────────────────── */
