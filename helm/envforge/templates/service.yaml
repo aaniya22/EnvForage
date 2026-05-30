@@ -5,7 +5,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   selector:
-    app: {{ include "envforge.fullname" . }}
+    app: {{ include "envforge.fullname" . }}-backend
   ports:
     - port: {{ .Values.service.port }}
       targetPort: 8000

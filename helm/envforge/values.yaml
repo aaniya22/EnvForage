@@ -24,10 +24,26 @@ resources:
     memory: 512Mi
 
 env:
-  DATABASE_URL: "postgresql://user:password@postgres:5432/envforge"
+  DATABASE_URL: "postgresql+asyncpg://envforge:changeme@envforge-postgres:5432/envforge"
   REDIS_URL: "redis://envforge-redis:6379/0"
 
 redis:
   enabled: true
   image: redis:7-alpine
   port: 6379
+
+postgres:
+  image: postgres:16-alpine
+  user: envforge
+  password: changeme
+  db: envforge
+  storage: 5Gi
+
+ollama:
+  image: ollama/ollama:latest
+
+frontend:
+  repository: envforge-frontend
+  tag: latest
+  pullPolicy: IfNotPresent
+  apiUrl: "/api/v1"
