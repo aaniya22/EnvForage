@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { UploadCloud, CheckCircle, AlertTriangle, ShieldAlert, Cpu, HardDrive, Monitor, Terminal } from "lucide-react";
+import { UploadCloud, ShieldAlert, Cpu, HardDrive, Monitor, Terminal } from "lucide-react";
 import { DiagnosticReport, DiagnosticResponse, Profile } from "../../types";
 import { api } from "../../services/api";
 import Link from "next/link";
