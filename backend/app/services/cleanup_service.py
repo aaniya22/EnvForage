@@ -26,17 +26,19 @@ async def delete_expired_records(db: AsyncSession) -> dict[str, Any]:
     scripts_result = await db.execute(
         delete(GeneratedScript).where(GeneratedScript.created_at < scripts_cutoff)
     )
+    deleted_scripts: int = scripts_result.rowcount  # type: ignore[attr-defined]
 
     # Delete script_generation_jobs (parent records)
     jobs_result = await db.execute(
         delete(ScriptGenerationJob).where(ScriptGenerationJob.created_at < jobs_cutoff)
     )
+    deleted_jobs: int = jobs_result.rowcount  # type: ignore[attr-defined]
 
     await db.commit()
 
     summary: dict[str, Any] = {
-        "deleted_scripts": int(scripts_result.rowcount),
-        "deleted_jobs": int(jobs_result.rowcount),
+        "deleted_scripts": deleted_scripts,
+        "deleted_jobs": deleted_jobs,
         "ran_at": now.isoformat(),
     }
     logger.info(f"Cleanup completed: {summary}")
