@@ -155,7 +155,7 @@ class RedisBackend(RateLimitBackend):
                 "Add 'redis[asyncio]' to backend/pyproject.toml dependencies "
                 "and reinstall: pip install -e ."
             ) from exc
-        self._client = aioredis.from_url(redis_url, decode_responses=True)
+        self._client = aioredis.from_url(redis_url, decode_responses=True)  # type: ignore[no-untyped-call]
 
     async def is_allowed(self, key: str, max_requests: int, window_seconds: int) -> tuple[bool, dict[str, Any]]:
         import uuid
