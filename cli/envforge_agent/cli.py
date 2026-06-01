@@ -112,10 +112,10 @@ def cli(ctx: click.Context, no_color: bool) -> None:
     "--format",
     "-f",
     "output_format",
-    type=click.Choice(["json", "yaml"], case_sensitive=False),
+    type=click.Choice(["json", "yaml", "markdown"], case_sensitive=False),
     default="json",
     show_default=True,
-    help="Output format for the diagnostic report (json, yaml).",
+    help="Output format for the diagnostic report (json, yaml, markdown).",
 )
 @click.option(
     "--timeout", "-t",
@@ -127,8 +127,6 @@ def cli(ctx: click.Context, no_color: bool) -> None:
 def diagnose(output: str | None, send: bool, api_url: str, quiet: bool, sarif: bool, timeout: int, output_format: str = "json") -> None:
     asyncio.run(_diagnose(output, send, api_url, quiet, sarif, timeout, output_format))
 
-def diagnose(output: str | None, send: bool, api_url: str, quiet: bool, sarif: bool, timeout: int, output_format: str) -> None:
-    asyncio.run(_diagnose(output, send, api_url, quiet, sarif, timeout, output_format))
 
 async def _diagnose(output: str | None, send: bool, api_url: str, quiet: bool, sarif: bool, timeout: int, output_format: str) -> None:
     """
@@ -163,6 +161,8 @@ async def _diagnose(output: str | None, send: bool, api_url: str, quiet: bool, s
     if output_format == "yaml":
         import yaml
         report_output = yaml.dump(report.model_dump(mode='json'), default_flow_style=False, sort_keys=False)
+    elif output_format == "markdown":
+        report_output = report.to_markdown()
     else:
         report_output = report.to_json(indent=2)
 
