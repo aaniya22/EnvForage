@@ -222,7 +222,7 @@ export default function ProfilesPage() {
 						}}
 					>
 						<option value="ALL">All Operating Systems</option>
-						<option value="WINDOWS">Windows</option>
+						<option value="WIN">Windows</option>
 						<option value="LINUX">Linux</option>
 						<option value="WSL">WSL</option>
 					</select>
