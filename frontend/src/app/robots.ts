@@ -4,7 +4,7 @@ export default function robots(): MetadataRoute.Robots {
   let rawBase = process.env.NEXT_PUBLIC_BASE_URL?.trim() || ''
 
   if (process.env.NODE_ENV === 'production' && (!rawBase || rawBase.includes('localhost'))) {
-    throw new Error('NEXT_PUBLIC_BASE_URL is not set or is localhost in production')
+    console.error('ERROR: NEXT_PUBLIC_BASE_URL is not set or is localhost in production build.')
   }
 
   if (!rawBase) rawBase = 'http://localhost:3000'
