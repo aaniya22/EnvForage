@@ -70,8 +70,10 @@ export default function RootLayout({
 				{/* Canonical URL — prevents duplicate indexing across trailing-slash,
 				    query-string, and www/non-www variants for every route. */}
 				<CanonicalURL />
-				<Script id="theme-init" strategy="beforeInteractive">
-					{`
+				<script
+					id="theme-init"
+					dangerouslySetInnerHTML={{
+						__html: `
             try {
               const storedTheme = localStorage.getItem("theme");
               const theme =
@@ -98,8 +100,9 @@ export default function RootLayout({
             } catch {
               document.documentElement.setAttribute("data-theme", "dark");
             }
-          `}
-				</Script>
+          `,
+					}}
+				/>
 			</head>
 
 			<body
