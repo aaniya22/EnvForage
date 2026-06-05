@@ -12,12 +12,11 @@ slot in by subclassing Source and yielding Package instances.
 from __future__ import annotations
 try:
     import tomllib
-except ImportError:
     try:
-        import tomli as tomllib
+        import tomli as tomllib  # type: ignore[no-redef]
     except ImportError:
         try:
-            from pip._vendor import tomli as tomllib
+            from pip._vendor import tomli as tomllib  # type: ignore[no-redef,no-name-in-module]
         except ImportError:
             tomllib = None
 import json
