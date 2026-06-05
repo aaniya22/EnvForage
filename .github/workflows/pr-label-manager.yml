@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run Label Manager Engine
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             // --- CONSTANTS & CONFIGURATION ---
