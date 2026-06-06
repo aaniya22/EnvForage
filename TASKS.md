@@ -130,7 +130,7 @@
 - [x] **Step 105: Master Payload Builder** (Target: `cli/envforge_agent/report.py`)
 - [x] **Step 106: HTTP Client for Telemetry Upload** (Target: `cli/envforge_agent/cli.py`)
 - [x] **Step 107: Pytest CLI Runner Configuration** (Target: `cli/tests/conftest.py`)
-- [ ] **Step 108: Mock Subprocess Fixture Injection** (Target: `cli/tests/unit/test_detectors.py`)
+- [x] **Step 108: Mock Subprocess Fixture Injection** (Target: `cli/tests/unit/test_detectors.py`)
 
 ## Milestone 10: CLI Offline Capabilities & Tools
 - [ ] **Step 109: Local SQLite Caching Base** (Target: `cli/envforge_agent/cache.py`)
