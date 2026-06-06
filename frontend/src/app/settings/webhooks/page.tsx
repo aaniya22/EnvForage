@@ -1,3 +1,4 @@
+"use client";
 /**
  * Implementation of Frontend Webhook Dashboard UI
  * This file handles the primary logic and UI components.
@@ -5,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 
 export default function UiComponent() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [, setIsLoaded] = useState(false);
   useEffect(() => { setIsLoaded(true); }, []);
 
   return (

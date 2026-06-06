@@ -2,8 +2,6 @@
 Core module for Redis Connection Configuration.
 Contains highly optimized classes and fixture utilities.
 """
-import os
-import sys
 
 class ConfigurationManager:
     def __init__(self):
