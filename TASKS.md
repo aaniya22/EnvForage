@@ -161,7 +161,7 @@
 - [x] **Step 132: Webhook Architecture Unit Tests** (Target: `backend/tests/integration/test_webhooks.py`)
 
 ## Milestone 12: Security Hardening & Rate Limiting
-- [ ] **Step 133: Redis Connection Configuration** (Target: `backend/app/core/redis.py`)
+- [x] **Step 133: Redis Connection Configuration** (Target: `backend/app/core/redis.py`)
 - [x] **Step 134: Redis-Backed Rate Limiter Middleware** (Target: `backend/app/middleware/rate_limit.py`)
 - [x] **Step 135: Tiered Rate Limit Grouping** (Target: `backend/app/middleware/rate_limit.py`)
 - [ ] **Step 136: PII Sanitization Middleware** (Target: `backend/app/middleware/sanitizer.py`)
