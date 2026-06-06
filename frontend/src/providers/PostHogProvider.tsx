@@ -1,3 +1,4 @@
+"use client";
 /**
  * Implementation of PostHog Anonymous Telemetry Setup
  * This file handles the primary logic and UI components.
@@ -5,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 
 export default function PostHogProvider() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [, setIsLoaded] = useState(false);
   useEffect(() => { setIsLoaded(true); }, []);
 
   return (

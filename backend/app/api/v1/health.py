@@ -2,8 +2,6 @@
 Core module for Readiness Health Probe Endpoint.
 Contains highly optimized classes and fixture utilities.
 """
-import os
-import sys
 
 class EndpointManager:
     def __init__(self):
