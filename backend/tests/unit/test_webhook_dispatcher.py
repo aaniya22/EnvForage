@@ -78,7 +78,9 @@ class TestTruncate:
     def test_long_string_truncated(self) -> None:
         long_str = "x" * 600
         result = _truncate(long_str)
-        assert len(result) == _RESPONSE_BODY_TRUNCATION_LIMIT + 1  # +1 for ellipsis char
+        assert (
+            len(result) == _RESPONSE_BODY_TRUNCATION_LIMIT + 1
+        )  # +1 for ellipsis char
         assert result.endswith("…")
 
     def test_exact_limit_unchanged(self) -> None:
@@ -96,7 +98,9 @@ class TestTruncate:
 
 
 @pytest.mark.asyncio
-async def test_dispatch_webhook_success_returns_true(caplog: pytest.LogCaptureFixture) -> None:
+async def test_dispatch_webhook_success_returns_true(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     """A 2xx response must return True and log an info message."""
     mock_response = MagicMock()
     mock_response.status_code = 200
@@ -113,7 +117,9 @@ async def test_dispatch_webhook_success_returns_true(caplog: pytest.LogCaptureFi
 
 
 @pytest.mark.asyncio
-async def test_dispatch_webhook_success_logs_target_url(caplog: pytest.LogCaptureFixture) -> None:
+async def test_dispatch_webhook_success_logs_target_url(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
     mock_response = MagicMock()
     mock_response.status_code = 201
     mock_response.raise_for_status = MagicMock()

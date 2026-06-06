@@ -14,16 +14,19 @@ from .models import AuditResult, DiffEntry
 from .sources import Source
 
 
-def _classify_version_change(a: str, b: str) -> str:
+def _classify_version_change(a: str | None, b: str | None) -> str:
     """Classify a version change by semver-style severity.
 
     Returns one of: "major", "minor", "patch", "other".
     Non-numeric or unparseable version strings fall through to "other".
     """
     try:
-        a_ver = parse_version(a)
-        b_ver = parse_version(b)
-    except InvalidVersion:
+        a_ver = parse_version(a) if a is not None else None
+        b_ver = parse_version(b) if b is not None else None
+    except (InvalidVersion, TypeError):
+        return "other"
+
+    if a_ver is None or b_ver is None:
         return "other"
 
     if a_ver == b_ver:
