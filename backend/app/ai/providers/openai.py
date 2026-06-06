@@ -186,6 +186,26 @@ class OpenAIProvider(LLMProvider):
                                 await asyncio.sleep(delay)
                                 continue
 
+                            if response.status_code in (502, 503):
+                                error_body = await response.aread()
+                                logger.warning(
+                                    "OpenAI returned %d. Retrying in %s seconds... (Attempt %d/%d)",
+                                    response.status_code,
+                                    base_delay ** attempt,
+                                    attempt + 1,
+                                    max_retries,
+                                )
+
+                                if attempt >= max_retries - 1:
+                                    raise LLMProviderError(
+                                        "openai",
+                                        f"HTTP {response.status_code} (Bad Gateway/Service Unavailable) - "
+                                        f"retry attempts exhausted: {error_body.decode(errors='replace')[:500]}",
+                                    )
+
+                                await asyncio.sleep(base_delay ** attempt)
+                                continue
+
                             if response.status_code != 200:
                                 error_body = await response.aread()
                                 raise LLMProviderError(
