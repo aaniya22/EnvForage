@@ -154,7 +154,7 @@
 - [x] **Step 125: Webhook Retry & Backoff Logic** (Target: `backend/app/core/events.py`)
 - [x] **Step 126: Plugin Interface Base Class** (Target: `backend/app/plugins/base.py`)
 - [x] **Step 127: Dynamic Plugin Loader Utility** (Target: `backend/app/plugins/loader.py`)
-- [ ] **Step 128: Sample Audit Plugin Implementation** (Target: `backend/app/plugins/sample_audit.py`)
+- [x] **Step 128: Sample Audit Plugin Implementation** (Target: `backend/app/plugins/sample_audit.py`)
 - [ ] **Step 129: Plugin Activation API Endpoint** (Target: `backend/app/api/v1/plugins.py`)
 - [ ] **Step 130: Frontend Webhook Dashboard UI** (Target: `frontend/src/app/settings/webhooks/page.tsx`)
 - [ ] **Step 131: Webhook Delivery Logs View** (Target: `frontend/src/app/settings/webhooks/logs.tsx`)
