@@ -109,14 +109,14 @@
 - [x] **Step 86: AI Troubleshoot POST Route (Sync)** (Target: `backend/app/api/v1/troubleshoot.py`)
 - [x] **Step 87: Convert Troubleshoot Route to Streaming (SSE)** (Target: `backend/app/api/v1/troubleshoot.py`)
 - [x] **Step 88: Context Window Summarization Middleware** (Target: `backend/app/ai/service.py`)
-- [ ] **Step 89: Frontend SSE Consumer Hook** (Target: `frontend/src/hooks/useAIStream.ts`)
+- [x] **Step 89: Frontend SSE Consumer Hook** (Target: `frontend/src/hooks/useAIStream.ts`)
 - [x] **Step 90: Markdown Streaming Renderer UI** (Target: `frontend/src/app/troubleshoot/page.tsx`)
 - [x] **Step 91: Stop Generation Abort Controller** (Target: `frontend/src/app/troubleshoot/page.tsx`)
-- [ ] **Step 92: Stream Error Recovery Logic** (Target: `frontend/src/hooks/useAIStream.ts`)
+- [x] **Step 92: Stream Error Recovery Logic** (Target: `frontend/src/hooks/useAIStream.ts`)
 - [x] **Step 93: Token Budget Limiter** (Target: `backend/app/ai/service.py`)
 - [x] **Step 94: Synchronize Loader to AI Startup** (Target: `frontend/src/app/troubleshoot/page.tsx`)
 - [x] **Step 95: Save AI Session to Database** (Target: `backend/app/api/v1/troubleshoot.py`)
-- [ ] **Step 96: Automated E2E AI Component Test** (Target: `frontend/tests/e2e/troubleshoot.spec.ts`)
+- [x] **Step 96: Automated E2E AI Component Test** (Target: `frontend/tests/e2e/troubleshoot.spec.ts`)
 
 ## Milestone 9: CLI Agent Base & Telemetry Extraction
 - [x] **Step 97: Click/Typer CLI Initialization** (Target: `cli/envforge_agent/cli.py`)
@@ -130,10 +130,10 @@
 - [x] **Step 105: Master Payload Builder** (Target: `cli/envforge_agent/report.py`)
 - [x] **Step 106: HTTP Client for Telemetry Upload** (Target: `cli/envforge_agent/cli.py`)
 - [x] **Step 107: Pytest CLI Runner Configuration** (Target: `cli/tests/conftest.py`)
-- [ ] **Step 108: Mock Subprocess Fixture Injection** (Target: `cli/tests/unit/test_detectors.py`)
+- [x] **Step 108: Mock Subprocess Fixture Injection** (Target: `cli/tests/unit/test_detectors.py`)
 
 ## Milestone 10: CLI Offline Capabilities & Tools
-- [ ] **Step 109: Local SQLite Caching Base** (Target: `cli/envforge_agent/cache.py`)
+- [x] **Step 109: Local SQLite Caching Base** (Target: `cli/envforge_agent/cache.py`)
 - [x] **Step 110: Hardware Signature Fingerprinting** (Target: `cli/envforge_agent/detectors/system_detector.py`)
 - [x] **Step 111: CLI Offline Mode Flag** (Target: `cli/envforge_agent/cli.py`)
 - [x] **Step 112: Export to JSON Command** (Target: `cli/envforge_agent/cli.py`)
