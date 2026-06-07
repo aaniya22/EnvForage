@@ -41,6 +41,7 @@ class Settings(BaseSettings):
 
     # ── Database ──────────────────────────────────────────────
     database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/envforge"
+    database_command_timeout_seconds: float = 30.0
 
     # ── Redis ─────────────────────────────────────────────────
     # If set, the rate limiter will use Redis instead of in-memory storage.

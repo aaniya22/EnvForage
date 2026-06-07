@@ -32,6 +32,7 @@ def _make_engine() -> AsyncEngine:
         max_overflow=20,
         pool_recycle=1800,
         connect_args={
+            "command_timeout": settings.database_command_timeout_seconds,
             "prepared_statement_cache_size": 0,
             "statement_cache_size": 0,
         },
