@@ -194,7 +194,9 @@ async def sync_pypi_releases(db: AsyncSession) -> None:
                                 ):
                                     best_match = entry
                                     break
-                            except Exception:
+                            except Exception as e:
+                            import logging
+                            logging.error(f"Sync error 3: {e}")
                                 pass
                         closest_cuda = best_match.supported_cuda
                         closest_rocm = best_match.supported_rocm
