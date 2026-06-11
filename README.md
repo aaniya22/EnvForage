@@ -1,19 +1,24 @@
+<div align="center">
+  
 # EnvForge 🛠️
 
-> **Production-Grade ML Environment Provisioning Platform**
+### ✨ Production-Grade ML Environment Provisioning Platform
 
-EnvForge is an intelligent environment provisioning platform that automates one of the most frustrating parts of machine learning development: creating reliable and compatible development environments.
+EnvForge is an **intelligent environment provisioning platform** that **automates one of the most frustrating parts of machine learning development: creating reliable and compatible development environments.**
 
-By combining hardware diagnostics, compatibility-aware version resolution, template-driven script generation, and built-in safety validation, EnvForge enables developers to generate deterministic setup scripts for PyTorch, TensorFlow, CUDA, YOLO, and other ML ecosystems across Windows, WSL, and Linux.
+By combining **hardware diagnostics, compatibility-aware version resolution, template-driven script generation, and built-in safety validation**, EnvForge enables developers to **generate deterministic setup scripts for PyTorch, TensorFlow, CUDA, YOLO, and other ML ecosystems across Windows, WSL, and Linux.**
 
-No more CUDA mismatches. No more dependency conflicts. No more hours spent debugging installation issues.
+**No more** CUDA mismatches. No more dependency conflicts. No more hours spent debugging installation issues.
 
-**Generate. Verify. Deploy. Build AI with confidence.**
+<i>**Generate. Verify. Deploy. Build AI with confidence.**</i>
 
+</div>
 
-## 👥 Contributors
+----
 
-A massive thank you to all the developers who have contributed code, resolved issues, and helped shape EnvForge into a production-grade ML environment provisioning platform!
+## Contributors
+
+👥 A massive thank you to all the developers who have contributed code, resolved issues, and helped shape EnvForge into a production-grade ML environment provisioning platform!
 
 <a href="https://github.com/rishabh0510rishabh/EnvForage/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=rishabh0510rishabh/EnvForage" alt="Contributors Grid" style="max-width: 100%; border-radius: 8px;" />
@@ -21,36 +26,36 @@ A massive thank you to all the developers who have contributed code, resolved is
 
 *Made with [contrib.rocks](https://contrib.rocks).*
 
----
+----
 
 ## 📑 Table of Contents
-- [Project Overview](#project-overview)
-- [Contributors](#contributors)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Project Structure](#project-structure)
-- [Quick Start](#quick-start)
-- [Documentation Links](#documentation-links)
-- [Contributing](#contributing)
-- [Roadmap](#roadmap)
-- [License](#license)
+- [🎯 Project Overview](#project-overview)
+- [👥 Contributors](#contributors)
+- [✅ Features](#features)
+- [🏗️ Architecture](#architecture)
+- [📂 Project Structure](#project-structure)
+- [🚀 Steps To Run](#steps-to-run)
+- [📚 Documentation Links](#documentation-links)
+- [🤝 Contributing](#contributing)
+- [🗺️ Roadmap](#roadmap)
+- [⚖️ License](#license)
 
----
+----
 
-## 🎯 Project Overview
+## Project Overview
 
 **Deterministic logic > AI generation.**
 Because scripts affect real systems, EnvForge relies on a strictly deterministic **Compatibility Engine** to resolve versions. It never guesses package versions or writes destructive shell commands.
 
 EnvForge helps users:
-* Generate environment setup scripts (`setup.sh`, `setup.ps1`, `Dockerfile`)
-* Install compatible ML frameworks (TensorFlow, PyTorch, YOLO, etc.)
-* Verify existing environments
-* Diagnose setup issues across OS, GPU, and Python boundaries
+* 🔧 Generate environment setup scripts (`setup.sh`, `setup.ps1`, `Dockerfile`)
+* 🧪 Install compatible ML frameworks (TensorFlow, PyTorch, YOLO, etc.)
+* ✅ Verify existing environments
+* 🩺 Diagnose setup issues across OS, GPU, and Python boundaries
 
----
+----
 
-## ✨ Features
+## Features
 
 - **Environment Profiles**: Out-of-the-box configurations for `pytorch-cuda`, `tf-gpu`, `yolov8`, and more.
 - **Hardware Introspection**: A standalone CLI agent (`envforge-agent`) that detects OS, RAM, GPU, VRAM, and CUDA details without an internet connection.
@@ -58,11 +63,11 @@ EnvForge helps users:
 - **Idempotent Setup**: Scripts verify prerequisites before installing anything.
 - **RESTful API**: Fast, async backend built on FastAPI and PostgreSQL.
 
----
+----
 
-## 🏗️ Architecture
+## Architecture
 
-EnvForge is built with a modular, scalable architecture.
+🏗️ EnvForge is built with a modular, scalable architecture.
 
 1. **CLI Diagnostic Agent**: Inspects local hardware and emits a structured JSON `DiagnosticReport`.
 2. **API Layer**: FastAPI handles incoming requests and orchestrates logic.
@@ -70,10 +75,36 @@ EnvForge is built with a modular, scalable architecture.
 4. **Template Engine**: Renders Jinja2 templates (`.sh`, `.ps1`, `Dockerfile`) based on the resolved environment.
 5. **Safety Filter**: Scans rendered output to block destructive actions.
 
+```mermaid
+graph TD
+    %% Styling definitions
+    classDef component fill:#2374f7,stroke:#1055c4,stroke-width:2px,color:#fff;
+    classDef data fill:#f9f9f9,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5,color:#000;
+    classDef safety fill:#e63946,stroke:#b71c1c,stroke-width:2px,color:#fff;
+
+    %% Nodes
+    CLI["1. CLI Diagnostic Agent<br>(Local Hardware Inspection)"]:::component
+    JSON["DiagnosticReport<br>(Structured JSON)"]:::data
+    API["2. API Layer<br>(FastAPI Orchestration)"]:::component
+    Engine["3. Compatibility Engine<br>(CUDA & Framework Matrices)"]:::component
+    Template["4. Template Engine<br>(Jinja2: .sh, .ps**1**, Dockerfile)"]:::component
+    Safety["5. Safety Filter<br>(Destructive Action Scan)"]:::safety
+    Output["Safe Deployable Artifacts"]:::data
+
+    %% Flow / Connections
+    CLI -->|Emits| JSON
+    JSON -->|Posts to| API
+    API <-->|Consults| Engine
+    API -->|Triggers| Template
+    Template -->|Generates Raw Output| Safety
+    Safety -->|Approves & Emits| Output
+```
+
 For more details, see [ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 
----
-## 📂 Project Structure
+----
+
+## Project Structure
 
 ```text
 EnvForage/
@@ -133,8 +164,9 @@ EnvForage/
 └── README.md
 ```
 
+----
 
-## 🚀 Quick Start
+## Steps To Run
 
 ### 1. Install the CLI Agent
 Inspect your environment without needing the backend!
@@ -172,7 +204,7 @@ kubectl port-forward svc/envforge 8000:8000
 kubectl port-forward svc/envforge-frontend 3000:3000
 ```
 
-The API is now running at `http://localhost:8000`.
+🚀 The API is now running at `http://localhost:8000`.
 
 ### 3. Generate a Script
 Generate a PyTorch CUDA setup script for Linux:
@@ -182,11 +214,11 @@ curl -X POST http://localhost:8000/api/v1/scripts/generate \
   -d '{"profile_id": "pytorch-cuda", "target_os": "LINUX", "output_formats": ["setup.sh"]}'
 ```
 
----
+----
 
-## 📚 Documentation Links
+## Documentation Links
 
-| Document | Purpose |
+| 📚 Document | Purpose |
 |----------|---------|
 | [ARCHITECTURE.md](./docs/ARCHITECTURE.md) | High-level system overview and component boundaries |
 | [COMPATIBILITY_ENGINE.md](./docs/COMPATIBILITY_ENGINE.md) | Core logic: CUDA mappings and framework rules |
@@ -198,11 +230,11 @@ curl -X POST http://localhost:8000/api/v1/scripts/generate \
 | [PROFILE_SPEC.md](./docs/PROFILE_SPEC.md) | How to build and define new ML profiles |
 | [TASKS.md](./TASKS.md) | The master implementation blueprint |
 
----
+----
 
-## 🤝 Contributing
+## Contributing
 
-We love open source! Contributions of all sizes are welcome — whether it's fixing bugs, improving documentation, adding new environment profiles, enhancing the compatibility engine, or proposing new features.
+🤝 We love open source! Contributions of all sizes are welcome — whether it's fixing bugs, improving documentation, adding new environment profiles, enhancing the compatibility engine, or proposing new features.
 
 Please read our [Contributing Guide](./CONTRIBUTING.md) before getting started. You'll find detailed instructions for:
 
@@ -217,9 +249,9 @@ Before submitting a contribution, please ensure that all tests pass and relevant
 
 Thank you for helping make EnvForge more reliable, safe, and developer-friendly!
 
----
+----
 
-## 🗺️ Roadmap
+## Roadmap
 
 - **Phase 1**: Core Backend (Compatibility Engine, Template Engine) ✅
 - **Phase 2**: CLI Diagnostic Agent (`envforge-agent`) ✅
@@ -228,10 +260,10 @@ Thank you for helping make EnvForge more reliable, safe, and developer-friendly!
 - **Phase 5**: Environment Verification ✅
 - **Phase 6**: Polish & Production Readiness ✅
 
-See the full [ROADMAP.md](./docs/ROADMAP.md) for details.
+🗺️ See the full [ROADMAP.md](./docs/ROADMAP.md) for details.
 
----
+----
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
