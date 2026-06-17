@@ -6,6 +6,8 @@ from collections.abc import Iterator
 
 from fastapi import APIRouter, Depends, HTTPException, Path
 from fastapi.responses import StreamingResponse
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 from app.api.deps import DB
 from app.compatibility.errors import (
@@ -14,11 +16,8 @@ from app.compatibility.errors import (
     UnsupportedOSError,
 )
 from app.middleware.rate_limit import general_rate_limit
-from app.schemas.script import GenerationRequest, GenerationResponse
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
-
 from app.models.profile import EnvironmentProfile
+from app.schemas.script import GenerationRequest, GenerationResponse
 from app.services import script_service
 
 router = APIRouter()

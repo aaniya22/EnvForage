@@ -3,11 +3,9 @@ FastAPI application factory and lifespan management.
 """
 
 import asyncio
-import enum
 import sys
-import time
 import typing
-from collections.abc import AsyncGenerator, Callable
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 import structlog

@@ -8,9 +8,9 @@ database session dependency shown in generated OpenAPI documentation.
 import secrets
 from typing import Annotated
 
+import jwt
 from fastapi import Depends, Header, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-import jwt
 from jwt.exceptions import ExpiredSignatureError, PyJWTError
 from sqlalchemy.ext.asyncio import AsyncSession
 

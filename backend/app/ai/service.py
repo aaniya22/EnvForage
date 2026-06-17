@@ -216,6 +216,7 @@ class AITroubleshootService:
         A full safety validation runs after the stream completes.
         """
         import json as _json
+
         from app.templates.safety import FORBIDDEN_PATTERNS
 
         session_id = str(uuid.uuid4())

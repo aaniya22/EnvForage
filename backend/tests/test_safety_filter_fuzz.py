@@ -6,11 +6,10 @@ legitimate package management commands pass through cleanly.
 """
 
 import pytest
-from hypothesis import given, settings, assume
+from hypothesis import assume, given, settings
 from hypothesis import strategies as st
 
-from app.templates.safety import validate_rendered_output, SafetyViolationError
-
+from app.templates.safety import SafetyViolationError, validate_rendered_output
 
 # ── Strategies ──────────────────────────────────────────────────────────
 
