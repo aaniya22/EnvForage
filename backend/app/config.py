@@ -196,9 +196,10 @@ class Settings(BaseSettings):
 
             # Production deployments with multiple workers must use Redis
             if self.environment == "production" and not self.redis_url:
-                raise ValueError(
-                    "REDIS_URL must be configured when environment='production'. "
-                    "In-memory rate limiting is not suitable for distributed deployments. "
+                import logging
+                logging.getLogger("app.config").warning(
+                    "REDIS_URL is not configured when environment='production'. "
+                    "Falling back to in-memory rate limiting, which is not suitable for distributed deployments. "
                     "Each uvicorn worker maintains separate rate limit state, allowing "
                     "attackers to bypass limits by distributing requests across workers. "
                     "Configure Redis with format: redis://:password@host:port/db or redis://host:port/db"

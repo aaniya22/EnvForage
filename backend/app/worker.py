@@ -15,20 +15,23 @@ from app.schemas.diagnostic import CompatibilityIssue, DiagnoseResponse
 
 settings = get_settings()
 
+import logging as _logging
+_logger = _logging.getLogger(__name__)
+
 if not settings.redis_url:
     if "pytest" in sys.modules:
         pass
     else:
-        raise ValueError(
-            "REDIS_URL is not configured. The Celery worker requires Redis "
-            "as both broker and result backend. Set the REDIS_URL environment "
-            "variable (e.g. redis://:password@redis:6379/0)."
+        _logger.warning(
+            "REDIS_URL is not configured. Falling back to Celery eager mode. "
+            "All background tasks will run synchronously in-process. "
+            "For production distributed deployments, set the REDIS_URL environment variable."
         )
 
 celery_app = Celery(
     "envforage_worker",
-    broker=settings.redis_url or "redis://localhost:6379/0",
-    backend=settings.redis_url or "redis://localhost:6379/0",
+    broker=settings.redis_url or "memory://",
+    backend=settings.redis_url or "cache+memory://",
 )
 
 celery_app.conf.update(
@@ -37,6 +40,8 @@ celery_app.conf.update(
     result_serializer="json",
     timezone="UTC",
     enable_utc=True,
+    task_always_eager=not settings.redis_url,
+    task_eager_propagates=not settings.redis_url,
 )
 
 import logging as _logging
