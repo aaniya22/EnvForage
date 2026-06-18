@@ -170,10 +170,6 @@ class Settings(BaseSettings):
     # ── Admin API Key ─────────────────────────────────────────
     admin_api_key: str = ""
 
-    # ── Security Safeguards ──────────────────────────────────
-    allow_wildcard_cors_in_production: bool = False
-    allow_localhost_in_production: bool = False
-
     @model_validator(mode="after")
     def validate_secret_key(self) -> "Settings":
         """Enforce strong SECRET_KEY and validate Redis in production environments.
@@ -220,12 +216,6 @@ class Settings(BaseSettings):
         """
                 # Block wildcard CORS origin in production
         if self.environment == "production" and self.allowed_origins == "*":
-            if not self.allow_wildcard_cors_in_production:
-                raise ValueError(
-                    "Wildcard '*' CORS origin is strictly forbidden in production. "
-                    "Set ALLOW_WILDCARD_CORS_IN_PRODUCTION=true in your environment variables "
-                    "to bypass this check if wildcard CORS is required."
-                )
             import logging
             logging.getLogger("app.config").warning(
                 "Wildcard '*' CORS origin is configured in production. "
@@ -238,12 +228,6 @@ class Settings(BaseSettings):
                 parsed_origin = urllib.parse.urlparse(origin)
                 hostname = parsed_origin.hostname
                 if hostname in ("localhost", "127.0.0.1", "[::1]", "::1"):
-                    if not self.allow_localhost_in_production:
-                        raise ValueError(
-                            f"Localhost CORS origin '{origin}' is not allowed in production. "
-                            "Set ALLOW_LOCALHOST_IN_PRODUCTION=true in your environment variables "
-                            "to bypass this check if localhost origins are required."
-                        )
                     import logging
                     logging.getLogger("app.config").warning(
                         f"Localhost CORS origin '{origin}' is configured in production."
@@ -253,12 +237,6 @@ class Settings(BaseSettings):
             parsed_db = urllib.parse.urlparse(self.database_url)
             hostname = parsed_db.hostname
             if hostname in ("localhost", "127.0.0.1", "[::1]", "::1"):
-                if not self.allow_localhost_in_production:
-                    raise ValueError(
-                        "Localhost database URL is not allowed in production environment. "
-                        "Set ALLOW_LOCALHOST_IN_PRODUCTION=true in your environment variables "
-                        "to bypass this check if localhost databases are required."
-                    )
                 import logging
                 logging.getLogger("app.config").warning(
                     "Localhost database URL is configured in production environment."

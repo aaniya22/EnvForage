@@ -57,7 +57,12 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     ) -> Response:
         response = await call_next(request)
 
+        # Skip Content-Security-Policy for API documentation endpoints to allow Swagger/ReDoc CDN assets
+        is_docs_path = request.url.path in ("/api/docs", "/api/redoc", "/api/openapi.json")
+
         for header, value in _COMMON_HEADERS.items():
+            if header == "Content-Security-Policy" and is_docs_path:
+                continue
             response.headers.setdefault(header, value)
 
         if get_settings().environment == "production":
