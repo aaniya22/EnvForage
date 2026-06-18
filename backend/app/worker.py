@@ -16,6 +16,7 @@ from app.schemas.diagnostic import CompatibilityIssue, DiagnoseResponse
 settings = get_settings()
 
 import logging as _logging
+
 _logger = _logging.getLogger(__name__)
 
 if not settings.redis_url:
