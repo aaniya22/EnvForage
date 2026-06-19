@@ -1,7 +1,7 @@
 ; Inno Setup Script for EnvForage
 
 [Setup]
-AppId={{5DCE63EF-A39B-4DDF-90A0-B6D7D3193C5F}}
+AppId={{5DCE63EF-A39B-4DDF-90A0-B6D7D3193C5F}
 AppName=EnvForage
 AppVersion=2.0.0
 DefaultDirName={autopf}\EnvForage
@@ -52,6 +52,216 @@ Type: filesandordirs; Name: "{%USERPROFILE}\.envforage"
 [Code]
 var
   GpuWarningLabel: TNewStaticText;
+  ExistingInstallPage: TInputOptionWizardPage;
+  ProgressPage: TOutputProgressWizardPage;
+
+function GetInstalledUninstallString(var UninstallString: string): Boolean;
+var
+  RegPath, RegPathLegacy: string;
+begin
+  Result := False;
+  RegPath := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{5DCE63EF-A39B-4DDF-90A0-B6D7D3193C5F}_is1';
+  RegPathLegacy := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{5DCE63EF-A39B-4DDF-90A0-B6D7D3193C5F}}_is1';
+  if RegQueryStringValue(HKLM, RegPath, 'UninstallString', UninstallString) or
+     RegQueryStringValue(HKLM, RegPathLegacy, 'UninstallString', UninstallString) then
+  begin
+    Result := True;
+    Exit;
+  end;
+  if RegQueryStringValue(HKCU, RegPath, 'UninstallString', UninstallString) or
+     RegQueryStringValue(HKCU, RegPathLegacy, 'UninstallString', UninstallString) then
+  begin
+    Result := True;
+    Exit;
+  end;
+end;
+
+function CleanQuotes(S: string): string;
+begin
+  Result := S;
+  if Length(Result) > 0 then
+  begin
+    if Result[1] = '"' then
+      Delete(Result, 1, 1);
+    if (Length(Result) > 0) and (Result[Length(Result)] = '"') then
+      Delete(Result, Length(Result), 1);
+  end;
+end;
+
+procedure InitializeWizard();
+begin
+  // Create a custom page right after the welcome page
+  ExistingInstallPage := CreateInputOptionPage(
+    wpWelcome,
+    'Existing Installation Detected',
+    'An existing installation of EnvForage was detected on this computer.',
+    'Please select what you would like to do and click Next:',
+    True, // exclusive (radio buttons)
+    False // listbox format (looks cleaner and native)
+  );
+
+  // Add the radio options
+  ExistingInstallPage.Add('&Reinstall / Repair (Overwrites current files, keeps cache/databases)');
+  ExistingInstallPage.Add('&Uninstall (Removes the existing version completely)');
+
+  // Default to Reinstall / Repair
+  ExistingInstallPage.Values[0] := True;
+
+  // Create the progress page
+  ProgressPage := CreateOutputProgressPage(
+    'Checking Installation Health',
+    'Analyzing the existing EnvForage installation...'
+  );
+end;
+
+function ShouldSkipPage(PageID: Integer): Boolean;
+var
+  UninstallString: string;
+begin
+  Result := False;
+  if PageID = ExistingInstallPage.ID then
+  begin
+    // Skip this page if a previous installation is NOT found
+    Result := not GetInstalledUninstallString(UninstallString);
+  end;
+end;
+
+function CheckExistingInstallationHealth(var ErrorMsg: string): Boolean;
+var
+  UninstallString: string;
+  AppDir: string;
+  ExePath: string;
+  ResultCode: Integer;
+begin
+  Result := True; // Healthy by default
+  ErrorMsg := '';
+
+  ProgressPage.Show();
+  try
+    ProgressPage.SetProgress(10, 100);
+    ProgressPage.SetText('Reading installation registry metadata...', '');
+    Sleep(400); // Visual feedback pause
+
+    if GetInstalledUninstallString(UninstallString) then
+    begin
+      ProgressPage.SetProgress(40, 100);
+      ProgressPage.SetText('Locating main executable...', '');
+      Sleep(400);
+
+      AppDir := ExtractFilePath(CleanQuotes(UninstallString));
+      ExePath := AppDir + 'envforage.exe';
+
+      if not FileExists(ExePath) then
+      begin
+        ProgressPage.SetProgress(100, 100);
+        ErrorMsg := 'The main executable "envforage.exe" is missing from the installation directory.';
+        Result := False;
+        Sleep(200);
+      end
+      else
+      begin
+        ProgressPage.SetProgress(70, 100);
+        ProgressPage.SetText('Verifying binary integrity and runtime execution...', '');
+        Sleep(500);
+
+        // Try executing envforage.exe --version silently
+        if Exec(ExePath, '--version', AppDir, SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+        begin
+          ProgressPage.SetProgress(95, 100);
+          Sleep(300);
+          if ResultCode <> 0 then
+          begin
+            ErrorMsg := 'The executable crashed or failed to run correctly (Exit Code: ' + IntToStr(ResultCode) + ').';
+            Result := False;
+          end;
+        end
+        else
+        begin
+          ProgressPage.SetProgress(95, 100);
+          Sleep(300);
+          ErrorMsg := 'Failed to execute "envforage.exe". The binary may be corrupted or blocked.';
+          Result := False;
+        end;
+        ProgressPage.SetProgress(100, 100);
+        Sleep(200);
+      end;
+    end
+    else
+    begin
+      ProgressPage.SetProgress(100, 100);
+      ErrorMsg := 'No existing installation metadata found.';
+      Result := False;
+      Sleep(200);
+    end;
+  finally
+    ProgressPage.Hide();
+  end;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+var
+  UninstallString: string;
+  ErrorCode: Integer;
+  ErrorMsg: string;
+  MsgResult: Integer;
+begin
+  Result := True;
+  if CurPageID = ExistingInstallPage.ID then
+  begin
+    if ExistingInstallPage.SelectedValueIndex = 0 then
+    begin
+      // User selected "Reinstall / Repair"
+      if CheckExistingInstallationHealth(ErrorMsg) then
+      begin
+        // Current installation is healthy! Ask if they still want to proceed
+        MsgResult := MsgBox(
+          'No errors were detected in your current EnvForage installation (it is healthy and functional).' + #13#10#13#10 +
+          'Do you still want to proceed with reinstalling/repairing it?',
+          mbConfirmation,
+          MB_YESNO or MB_DEFBUTTON2
+        );
+        if MsgResult = IDYES then
+        begin
+          Result := True;
+        end
+        else
+        begin
+          // Abort the setup since they don't want to proceed with a healthy app
+          WizardForm.Close();
+          Result := False;
+        end;
+      end
+      else
+      begin
+        // Current installation has errors! Inform the user and proceed
+        MsgBox(
+          'The existing installation has errors/warnings:' + #13#10 +
+          ErrorMsg + #13#10#13#10 +
+          'Setup will now proceed to reinstall and repair the application.',
+          mbInformation,
+          MB_OK
+        );
+        Result := True;
+      end;
+    end
+    else if ExistingInstallPage.SelectedValueIndex = 1 then
+    begin
+      // User selected "Uninstall"
+      if GetInstalledUninstallString(UninstallString) then
+      begin
+        if ShellExec('open', CleanQuotes(UninstallString), '/SILENT', '', SW_SHOWNORMAL, ewWaitUntilTerminated, ErrorCode) then
+        begin
+          MsgBox('Existing version uninstalled successfully. Click OK to proceed with the new installation.', mbInformation, MB_OK);
+        end
+        else
+        begin
+          MsgBox('Failed to run the uninstaller. Setup will now abort.', mbError, MB_OK);
+          Result := False;
+        end;
+      end;
+    end;
+  end;
+end;
 
 const
   WM_SETTINGCHANGE = $001A;
