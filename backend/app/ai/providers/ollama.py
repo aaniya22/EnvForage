@@ -127,7 +127,7 @@ class OllamaProvider(LLMProvider):
 
         try:
             async with httpx.AsyncClient(timeout=httpx.Timeout(30.0))as client:
-                async with client.stream
+                async with client.stream(
                     "POST", self._generate_url, json=payload
                 ) as response:
                     response.raise_for_status()
