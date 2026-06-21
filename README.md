@@ -57,7 +57,9 @@ EnvForage helps users:
 ## Features
 
 - **Environment Profiles**: Out-of-the-box configurations for `pytorch-cuda`, `tf-gpu`, `yolov8`, and more.
+- **Windows Installer**: Official setup executable with existing-install detection, upgrade flows, and repair UI.
 - **Hardware Introspection**: A standalone CLI agent (`envforage`) that detects OS, RAM, GPU, VRAM, and CUDA details without an internet connection.
+- **Uninstall Feedback**: End-to-end telemetry and user feedback capture during uninstallation.
 - **Safety First**: Every generated script passes through a regex-based `SafetyFilter` that strictly blocks dangerous commands (e.g., `rm -rf /`, `mkfs`).
 - **Idempotent Setup**: Scripts verify prerequisites before installing anything.
 - **RESTful API**: Fast, async backend built on FastAPI and PostgreSQL.

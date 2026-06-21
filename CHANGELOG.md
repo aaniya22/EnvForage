@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-06-21
+
+### Added
+- **Windows Installer**: Added a dedicated Windows installer (`envforage-setup.exe`), an upgrade flow, and existing-install detection & repair UI.
+- **Uninstall Feedback Flow**: Built a full end-to-end feedback feature for when users uninstall (API, Database, and frontend UI).
+- **SQLite Cache**: Replaced the legacy in-memory/file fallback cache layer with a robust, persistent SQLite cache mechanism.
+
+### Changed
+- **UI & UX Improvements**: Replaced the `/install` route with `/download` and switched the app to default to Dark Mode. Migrated all documentation to interactive React pages instead of static files.
+- **Mock Replacements**: Replaced massive mock components (e.g., webhook logs) with clean, functional code.
+
+### Fixed
+- **Zero-Lint Codebase**: Cleared over 70 ESLint errors and warnings. The frontend is now strictly typed, completely lint-compliant, and free of dangerous `any` types and `@ts-ignore` statements.
+- **Security & Stability**: Added Gitleaks to the CI pipeline to catch secrets, relaxed overly strict prod safety checks, implemented an in-memory Redis fallback, and fixed severe hydration issues.
+
+
 ## [2.0.0] - 2026-06-18
 
 ### Added

@@ -297,6 +297,12 @@ This document expands upon the core architectural concepts introduced during the
 - **Tiered Rules:** Expensive routes (like `/api/v1/troubleshoot` hitting AI Providers) are capped strictly (e.g., 5 requests/minute). Static profile retrievals are capped loosely (e.g., 100 requests/minute).
 - Redis handles the atomic decrement operations (`DECR`) guaranteeing race-condition-free throttling.
 
+## 3. Persistent SQLite Cache (Backend)
+**The Problem:** The old caching layer relied on an unpredictable in-memory fallback cache that caused synchronization issues across workers.
+**The Solution:** We replaced the legacy caching layer with a robust, robust SQLite-backed cache.
+- Telemetry, telemetry syncs, and heavy computational lookups are now stored locally in a persistent SQLite database (`cache.db`).
+- This guarantees stable state across worker reloads and provides lightning-fast local reads without an external dependency.
+
 ## 3. CLI Offline Caching & Synchronization
 **The Problem:** Developers often work in air-gapped environments or on servers lacking outbound internet access.
 **The Solution:** The CLI Agent (`envforage`) initializes a local SQLite database at `~/.envforage/cache.db`.

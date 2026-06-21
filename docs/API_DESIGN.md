@@ -168,6 +168,30 @@ Submit a verification request for an installed environment.
 
 ---
 
+### Feedback
+
+#### `POST /feedback`
+Submit user feedback, typically triggered during the uninstall flow.
+
+**Request**:
+```json
+{
+  "reason": "Too complex",
+  "comments": "I preferred doing it manually.",
+  "rating": 2
+}
+```
+
+**Response**:
+```json
+{
+  "feedback_id": "fb_123456",
+  "status": "recorded"
+}
+```
+
+---
+
 ### AI Troubleshooting
 
 #### `POST /troubleshoot`
