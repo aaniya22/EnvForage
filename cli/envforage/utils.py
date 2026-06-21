@@ -144,9 +144,13 @@ def run_upgrade(interactive: bool = True) -> None:
                     click.echo("Launching installer in the background and exiting...")
 
                 # Execute installer silently
+                kwargs = {}
+                if hasattr(subprocess, "DETACHED_PROCESS"):
+                    kwargs["creationflags"] = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+
                 subprocess.Popen(
                     [temp_path, "/SILENT", "/SUPPRESSMSGBOXES", "/FORCECLOSEAPPLICATIONS"],
-                    creationflags=subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+                    **kwargs
                 )
                 sys.exit(0)
 

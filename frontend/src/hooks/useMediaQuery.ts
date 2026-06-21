@@ -54,10 +54,8 @@ export function useMediaQuery(query: string, defaultValue: boolean = false): boo
       };
     } else if (mediaQueryList.addListener) {
       // Deprecated fallback for older WebKit / IE
-      // @ts-expect-error — addListener is deprecated but needed for legacy browser support
       mediaQueryList.addListener(handleChange);
       return () => {
-        // @ts-expect-error — removeListener is deprecated but needed for legacy browser support
         mediaQueryList.removeListener(handleChange);
       };
     }
