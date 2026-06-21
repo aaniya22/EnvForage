@@ -135,6 +135,19 @@ async def sync_pypi_releases(db: AsyncSession) -> None:
                 sorted_releases.sort()
 
                 new_entries = 0
+
+                # Fetch existing framework entries once before the loop.
+                # Newly-added entries are appended to prev_entries below so
+                # later same-run versions can still inherit from earlier ones
+                # (preserving the original per-iteration query's behavior)
+                # without re-querying the DB on every iteration
+                db_prev = await db.execute(
+                    select(PythonMatrixEntry)
+                    .where(PythonMatrixEntry.framework == framework)
+                    .order_by(PythonMatrixEntry.created_at.desc())
+                )
+                prev_entries = list(db_prev.scalars().all())
+
                 for ver, v_str in sorted_releases:
                     if v_str in existing_versions:
                         continue
@@ -174,12 +187,6 @@ async def sync_pypi_releases(db: AsyncSession) -> None:
                     # Inherit from the closest previous version of the framework in the DB
                     closest_cuda = []
                     closest_rocm = []
-                    db_prev = await db.execute(
-                        select(PythonMatrixEntry)
-                        .where(PythonMatrixEntry.framework == framework)
-                        .order_by(PythonMatrixEntry.created_at.desc())
-                    )
-                    prev_entries = db_prev.scalars().all()
                     if prev_entries:
                         # Find closest version by major/minor
                         best_match = prev_entries[0]
@@ -198,18 +205,20 @@ async def sync_pypi_releases(db: AsyncSession) -> None:
                         closest_rocm = best_match.supported_rocm
 
                     # Create and add the new entry
-                    db.add(
-                        PythonMatrixEntry(
-                            id=uuid.uuid4(),
-                            framework=framework,
-                            version=v_str,
-                            min_python=min_py,
-                            max_python=max_py,
-                            supported_cuda=closest_cuda,
-                            supported_rocm=closest_rocm,
-                            supported_python=supported_py,
-                        )
+                    new_entry = PythonMatrixEntry(
+                        id=uuid.uuid4(),
+                        framework=framework,
+                        version=v_str,
+                        min_python=min_py,
+                        max_python=max_py,
+                        supported_cuda=closest_cuda,
+                        supported_rocm=closest_rocm,
+                        supported_python=supported_py,
                     )
+                    db.add(new_entry)
+                    # Make this entry visible to later iterations' closest-match
+                    # lookup, newest-first to match the original ordering
+                    prev_entries.insert(0, new_entry)
                     new_entries += 1
 
                 if new_entries > 0:
