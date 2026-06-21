@@ -114,7 +114,7 @@ jobs:
       - name: Compile Windows Installer (Inno Setup)
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
         with:
-          script: cli/installer/setup.iss
+          path: cli/installer/setup.iss
 
       - name: Upload Installer to GitHub Release
         uses: softprops/action-gh-release@v3
