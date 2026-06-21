@@ -319,13 +319,13 @@ class AITroubleshootService:
     async def _fetch_session_history(
         self,
         db: AsyncSession,
-        session_id: str,
+        session_id: uuid.UUID,
     ) -> list[AISuggestion]:
         """Fetch previous AI suggestions for a given session ID."""
         try:
             stmt = (
                 select(AISuggestion)
-                .where(AISuggestion.session_id == uuid.UUID(session_id))
+                .where(AISuggestion.session_id == session_id)
                 .order_by(AISuggestion.step_number.asc())
             )
             result = await db.execute(stmt)
