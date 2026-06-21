@@ -1,11 +1,12 @@
 """SQLAlchemy ORM models for script generation jobs."""
 
 import uuid
+import zlib
 from datetime import datetime
 from typing import Any
-from sqlalchemy import DateTime, ForeignKey, String, Text, func, LargeBinary
+
 import sqlalchemy as sa
-import zlib
+from sqlalchemy import DateTime, ForeignKey, LargeBinary, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
