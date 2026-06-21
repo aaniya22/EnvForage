@@ -116,13 +116,19 @@ async def sync_pypi_releases(db: AsyncSession) -> None:
                 if not releases:
                     continue
 
-                # Get all existing versions in database for this framework
-                db_result = await db.execute(
-                    select(PythonMatrixEntry).where(
-                        PythonMatrixEntry.framework == framework
-                    )
+                # Fetch all existing entries for this framework once, ordered
+                # newest-first. Used both to skip versions already in the DB and,
+                # below, as the starting point for CUDA/ROCm inheritance.
+                # Newly-created entries are appended to prev_entries inside the
+                # loop so later same-run versions can still inherit from earlier
+                # ones, without re-querying per version (#1017).
+                db_prev = await db.execute(
+                    select(PythonMatrixEntry)
+                    .where(PythonMatrixEntry.framework == framework)
+                    .order_by(PythonMatrixEntry.created_at.desc())
                 )
-                existing_versions = {e.version for e in db_result.scalars().all()}
+                prev_entries = list(db_prev.scalars().all())
+                existing_versions = {e.version for e in prev_entries}
 
                 # Sort releases by Version helper to find the latest
                 sorted_releases = []
@@ -136,16 +142,6 @@ async def sync_pypi_releases(db: AsyncSession) -> None:
 
                 new_entries = 0
 
-                # Fetch existing framework entries once before the loop.
-                # Newly-added entries are appended to prev_entries below so
-                # later same-run versions can still inherit from earlier ones
-                # (preserving the original per-iteration query's behavior)
-                # without re-querying the DB on every iteration
-                db_prev = await db.execute(
-                    select(PythonMatrixEntry)
-                    .where(PythonMatrixEntry.framework == framework)
-                    .order_by(PythonMatrixEntry.created_at.desc())
-                )
                 prev_entries = list(db_prev.scalars().all())
 
                 for ver, v_str in sorted_releases:
