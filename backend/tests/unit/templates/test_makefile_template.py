@@ -32,19 +32,19 @@ def make_context(
     )
 
 
-def test_makefile_is_registered():
+async def test_makefile_is_registered():
     # The core regression: "Makefile" must be in TEMPLATE_MAP.
     assert "Makefile" in TEMPLATE_MAP
 
 
-def test_makefile_renders_expected_targets():
+async def test_makefile_renders_expected_targets():
     context = make_context(
         profile_name="myenv",
         python_version="3.11",
         packages=[ResolvedPackage(name="numpy", version="1.26.0", cuda_variant=None)],
     )
     renderer = TemplateRenderer()
-    result = renderer.render("Makefile", context)
+    result = await renderer.render("Makefile", context)
     # Standard make targets the template defines.
     assert ".PHONY:" in result.content
     assert "install:" in result.content
@@ -56,7 +56,7 @@ def test_makefile_renders_expected_targets():
     assert "3.11" in result.content
 
 
-def test_all_output_formats_have_registered_templates():
+async def test_all_output_formats_have_registered_templates():
     """Contract test: every API-accepted OutputFormat must map to a template
     in TEMPLATE_MAP, and each mapped template file must exist on disk. This is
     the guard that prevents the schema/renderer drift that caused #1007.
