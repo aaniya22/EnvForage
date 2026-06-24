@@ -3,8 +3,9 @@
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
-from app.api.deps import get_current_user
 from pydantic import BaseModel
+
+from app.api.deps import get_current_user
 
 router = APIRouter(prefix="/circuit-breakers", tags=["Admin"], dependencies=[Depends(get_current_user)])
 

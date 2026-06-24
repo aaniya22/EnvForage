@@ -2,8 +2,7 @@
 
 from fastapi import APIRouter, Depends
 
-from app.api.deps import get_current_user
-from app.api.deps import DB
+from app.api.deps import DB, get_current_user
 from app.models.feedback import UninstallFeedback
 from app.schemas.feedback import FeedbackCreate, FeedbackResponse
 
