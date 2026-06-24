@@ -77,6 +77,8 @@ services:
       DEBUG: "true"
       SECRET_KEY: dev-secret-key-change-in-production
     command: alembic upgrade head
+    networks:
+      - envforage-network
 
   api:
     build:
