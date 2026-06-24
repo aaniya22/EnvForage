@@ -2,10 +2,11 @@
 # --- Circuit Breaker State API ---
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from app.api.deps import get_current_user
 from pydantic import BaseModel
 
-router = APIRouter(prefix="/circuit-breakers", tags=["Admin"])
+router = APIRouter(prefix="/circuit-breakers", tags=["Admin"], dependencies=[Depends(get_current_user)])
 
 # Simulated global state of circuit breakers registered in the app
 # Keys are integration names (e.g., 'sendgrid', 'payment_gateway')

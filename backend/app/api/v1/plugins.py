@@ -1,10 +1,11 @@
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from app.api.deps import get_current_user
 from app.plugins.loader import load_plugins
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 _active_plugins: dict[str, bool] = {}
 
 

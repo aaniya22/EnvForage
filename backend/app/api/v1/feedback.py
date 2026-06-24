@@ -1,12 +1,13 @@
 """Feedback endpoints -- POST /api/v1/uninstall/feedback."""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from app.api.deps import get_current_user
 from app.api.deps import DB
 from app.models.feedback import UninstallFeedback
 from app.schemas.feedback import FeedbackCreate, FeedbackResponse
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 @router.post(
