@@ -2,10 +2,10 @@ from typing import Any
 
 from fastapi import APIRouter, Depends
 
-from app.api.deps import get_current_user
+from app.api.deps import require_admin
 from app.plugins.loader import load_plugins
 
-router = APIRouter(dependencies=[Depends(get_current_user)])
+router = APIRouter(dependencies=[Depends(require_admin)])
 _active_plugins: dict[str, bool] = {}
 
 

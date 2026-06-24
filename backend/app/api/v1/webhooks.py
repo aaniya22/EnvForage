@@ -2,9 +2,9 @@ from typing import Any
 
 from fastapi import APIRouter, Depends
 
-from app.api.deps import DB, get_current_user
+from app.api.deps import DB, require_admin
 
-router = APIRouter(dependencies=[Depends(get_current_user)])
+router = APIRouter(dependencies=[Depends(require_admin)])
 
 
 @router.get("/webhooks", response_model=list[Any])
