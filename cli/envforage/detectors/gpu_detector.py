@@ -13,6 +13,7 @@ import stat
 import subprocess
 
 import logging
+from envforage.detectors.apple_silicon_detector import detect_gpu_info, is_apple_silicon
 from envforage.detectors.os_detector import _detect_wsl
 from envforage.schemas import GPUInfo
 
@@ -21,8 +22,15 @@ logger = logging.getLogger(__name__)
 
 def detect_gpus(timeout: int = 30) -> list[GPUInfo]:
     """
-    Detect all GPUs (NVIDIA or AMD).
+    Detect all GPUs (NVIDIA, AMD, or Apple Silicon integrated GPU).
     """
+    try:
+        gpus = _detect_via_apple_silicon(timeout=timeout)
+        if gpus:
+            return gpus
+    except Exception:
+        pass
+
     try:
         gpus = _detect_via_nvidia_smi(timeout=timeout)
         if gpus:
@@ -99,6 +107,29 @@ def _check_nvidia_container_toolkit() -> bool:
         return False
 
     return result.returncode == 0
+
+
+def _detect_via_apple_silicon(timeout: int = 30) -> list[GPUInfo]:
+    """
+    Detect the integrated GPU on Apple Silicon Macs.
+    """
+    if not is_apple_silicon():
+        return []
+
+    name, gpu_cores, metal_supported = detect_gpu_info(timeout=timeout)
+    if not name:
+        return []
+
+    return [
+        GPUInfo(
+            name=name,
+            vram_gb=None,
+            driver_version=None,
+            index=0,
+            gpu_cores=gpu_cores,
+            metal_supported=metal_supported,
+        )
+    ]
 
 
 def _detect_via_nvidia_smi(timeout: int = 30) -> list[GPUInfo]:

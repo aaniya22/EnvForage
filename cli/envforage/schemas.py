@@ -42,6 +42,8 @@ class GPUInfo(BaseModel):
     vram_gb: float | None = None
     driver_version: str | None = None
     index: int = 0
+    gpu_cores: int | None = None
+    metal_supported: bool = False
 
 
 class CUDAInfo(BaseModel):

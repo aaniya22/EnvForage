@@ -26,6 +26,8 @@ def detect_os() -> OSInfo:
         return _detect_windows(arch)
     elif system == "Linux":
         return _detect_linux(arch)
+    elif system == "Darwin":
+        return _detect_macos(arch)
     else:
         return OSInfo(name=system, version=platform.version(), architecture=arch)
 
@@ -129,3 +131,40 @@ def _detect_wsl() -> str | None:
         pass
 
     return None
+
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+
+
+def _detect_macos(arch: str) -> OSInfo:
+    """
+    Detect macOS version information.
+
+    Uses platform.mac_ver() for the version tuple, then maps the major
+    version to the familiar macOS release name.
+    """
+    try:
+        mac_ver, _, _ = platform.mac_ver()
+        version = mac_ver or platform.release()
+        name = _macos_release_name(mac_ver)
+    except Exception:
+        version = platform.release()
+        name = "macOS"
+
+    return OSInfo(name=name, version=version, architecture=arch, wsl_version=None)
+
+
+def _macos_release_name(mac_ver: str) -> str:
+    """Map a macOS version string (e.g. '14.5') to its marketing name."""
+    names = {
+        15: "macOS Sequoia",
+        14: "macOS Sonoma",
+        13: "macOS Ventura",
+        12: "macOS Monterey",
+        11: "macOS Big Sur",
+    }
+    try:
+        major = int(mac_ver.split(".")[0])
+    except (ValueError, IndexError):
+        return "macOS"
+    return names.get(major, "macOS")
