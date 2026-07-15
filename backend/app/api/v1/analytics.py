@@ -1,6 +1,6 @@
 """Analytics endpoint -- GET /api/v1/analytics/summary."""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends
 
 from app.api.deps import DB, get_current_user
 from app.schemas.analytics import AnalyticsSummaryResponse
@@ -17,10 +17,7 @@ router = APIRouter(dependencies=[Depends(get_current_user)])
     tags=["Analytics"],
     responses={200: {"description": "Summary returned successfully"}},
 )
-async def analytics_summary(
-    db: DB,
-    days: int = Query(30, ge=1, le=365, description="Lookback window in days."),
-) -> AnalyticsSummaryResponse:
+async def analytics_summary(db: DB) -> AnalyticsSummaryResponse:
     engine = AnalyticsEngine(db)
-    result = await engine.get_summary(days=days)
+    result = await engine.get_summary()
     return AnalyticsSummaryResponse(**result)
